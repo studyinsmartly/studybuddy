@@ -292,7 +292,7 @@
   function formatTime(seconds) {
     const m = Math.floor(seconds / 60).toString().padStart(2, '0');
     const s = (seconds % 60).toString().padStart(2, '0');
-    return ${m}:${s};
+    return `${m}:${s}`;
   }
 
   function updateTimerDisplay() {
@@ -355,7 +355,7 @@
 
     // Update message
     taskText.textContent = task;
-    affirmationText.innerHTML = <strong>Affirmation:</strong> ${affirmation};
+    affirmationText.innerHTML = `<strong>Affirmation:</strong> ${affirmation}`;
 
     // Show container
     messageContainer.classList.add('visible');
