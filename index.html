@@ -1,273 +1,400 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Study Buddy Pomodoro</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Study Buddy Pomodoro</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
 
-    :root {
-      --primary-color: #5cdb95;
-      --secondary-color: #05386b;
-      --background-color: #edf5e1;
-      --accent-color: #379683;
-      --text-color: #05386b;
-      --shadow-color: rgba(0,0,0,0.1);
-    }
+  :root {
+    --primary-color: #5cdb95;
+    --secondary-color: #05386b;
+    --background-color: #edf5e1;
+    --accent-color: #379683;
+    --text-color: #05386b;
+    --shadow-color: rgba(0,0,0,0.1);
+  }
 
-    * {
-      box-sizing: border-box;
-    }
+  * {
+    box-sizing: border-box;
+  }
 
-    body {
-      margin: 0;
-      background-color: var(--background-color);
-      font-family: 'Poppins', sans-serif;
-      color: var(--text-color);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      min-height: 100vh;
-      padding: 2rem 1rem;
-    }
+  body {
+    margin: 0;
+    background-color: var(--background-color);
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
 
-    header {
-      margin-bottom: 2rem;
-      text-align: center;
-    }
+  header {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
 
-    header h1 {
-      font-weight: 700;
-      font-size: 2.5rem;
-      letter-spacing: 2px;
-    }
+  header h1 {
+    font-weight: 700;
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+  }
 
-    .timer-settings {
-      margin-bottom: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-      width: 100%;
-      max-width: 350px;
-    }
+  .timer-settings {
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 350px;
+  }
 
-    label {
-      font-weight: 600;
-      font-size: 1.1rem;
-    }
+  label {
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
 
-    select {
-      padding: 0.6rem 1rem;
-      border-radius: 10px;
-      border: 2px solid var(--primary-color);
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--secondary-color);
-      cursor: pointer;
-      background: white;
-      transition: border-color 0.3s ease;
-      width: 100%;
-    }
+  select {
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    border: 2px solid var(--primary-color);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--secondary-color);
+    cursor: pointer;
+    background: white;
+    transition: border-color 0.3s ease;
+    width: 100%;
+  }
 
-    select:hover, select:focus {
-      border-color: var(--accent-color);
-      outline: none;
-    }
+  select:hover, select:focus {
+    border-color: var(--accent-color);
+    outline: none;
+  }
 
-    #timer-container {
-      position: relative;
-      width: 220px;
-      height: 220px;
-      margin-bottom: 2rem;
-    }
+  #timer-display {
+    font-size: 6rem;
+    font-weight: 700;
+    color: var(--secondary-color);
+    letter-spacing: 8px;
+    margin-bottom: 2rem;
+    user-select: none;
+  }
 
-    svg {
-      position: absolute;
-      top: 0; left: 0;
-      transform: rotate(-90deg);
-      width: 220px;
-      height: 220px;
-    }
+  .buttons {
+    display: flex;
+    gap: 1.5rem;
+  }
 
-    circle.bg {
-      fill: none;
-      stroke: #ccc;
-      stroke-width: 15;
-    }
+  button {
+    background-color: var(--primary-color);
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 6px 15px var(--shadow-color);
+    transition: background-color 0.3s ease;
+    user-select: none;
+  }
 
-    circle.progress {
-      fill: none;
-      stroke: var(--primary-color);
-      stroke-width: 15;
-      stroke-linecap: round;
-      transition: stroke-dashoffset 1s linear;
-    }
+  button:hover:not(:disabled) {
+    background-color: var(--accent-color);
+  }
 
+  button:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  .message-container {
+    margin-top: 2rem;
+    background: white;
+    max-width: 400px;
+    padding: 1.5rem 2rem;
+    border-radius: 20px;
+    box-shadow: 0 6px 15px var(--shadow-color);
+    text-align: center;
+    display: none;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .message-container.visible {
+    display: flex;
+  }
+
+  .message-container h2 {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+  }
+
+  .message-container p {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--secondary-color);
+  }
+
+  /* Delusional Boost Button Styling */
+  #boost-btn {
+    margin-top: 3rem;
+    background-color: #ff69b4;
+    color: white;
+    font-weight: bold;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    font-size: 1.1rem;
+  }
+
+  #boost-quote {
+    margin-top: 1.5rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #05386b;
+    min-height: 3em;
+  }
+
+  audio {
+    display: none;
+  }
+
+  @media (max-width: 400px) {
     #timer-display {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 5rem;
-      font-weight: 700;
-      color: var(--secondary-color);
-      letter-spacing: 8px;
-      user-select: none;
-      width: 100%;
-      text-align: center;
+      font-size: 4.5rem;
+      letter-spacing: 5px;
     }
-
-    .buttons {
-      display: flex;
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
     button {
-      background-color: var(--primary-color);
-      border: none;
-      padding: 1rem 2rem;
-      border-radius: 50px;
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: white;
-      cursor: pointer;
-      box-shadow: 0 6px 15px var(--shadow-color);
-      transition: background-color 0.3s ease;
-      user-select: none;
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
     }
-
-    button:hover:not(:disabled) {
-      background-color: var(--accent-color);
-    }
-
-    button:disabled {
-      opacity: 0.5;
-      cursor: default;
-    }
-
-    #sideeye-dog {
-      display: none;
-      width: 150px;
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      z-index: 1000;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
-  <header>
-    <h1>Study Buddy Pomodoro</h1>
-  </header>
 
-  <div class="timer-settings">
-    <label for="time-select">Choose Focus Time:</label>
-    <select id="time-select">
-      <option value="15">15 Minutes</option>
-      <option value="25" selected>25 Minutes</option>
-      <option value="45">45 Minutes</option>
-    </select>
-  </div>
+<header>
+  <h1>Study Buddy Pomodoro</h1>
+</header>
 
-  <div id="timer-container">
-    <svg>
-      <circle class="bg" cx="110" cy="110" r="100"></circle>
-      <circle class="progress" cx="110" cy="110" r="100" stroke-dasharray="628" stroke-dashoffset="0"></circle>
-    </svg>
-    <div id="timer-display">25:00</div>
-  </div>
+<div class="timer-settings">
+  <label for="study-time">Choose Study Time:</label>
+  <select id="study-time" aria-label="Choose study time in minutes">
+    <option value="15">15 minutes</option>
+    <option value="20" selected>20 minutes</option>
+    <option value="25">25 minutes</option>
+    <option value="30">30 minutes</option>
+    <option value="45">45 minutes</option>
+  </select>
+</div>
 
-  <div class="buttons">
-    <button id="start-btn">Start</button>
-    <button id="pause-btn" disabled>Pause</button>
-  </div>
+<div id="timer-display" aria-live="polite" aria-atomic="true">20:00</div>
 
-  <img id="sideeye-dog" src="https://i.imgur.com/1oVZ2Ak.png" alt="Side-eye dog">
-  <audio id="pause-audio" preload="auto">
-    <source src="https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg" type="audio/ogg" />
-  </audio>
+<div class="buttons">
+  <button id="start-btn" aria-label="Start Timer">Start</button>
+  <button id="pause-btn" aria-label="Pause Timer" disabled>Pause</button>
+  <button id="reset-btn" aria-label="Reset Timer" disabled>Reset</button>
+</div>
 
-  <script>
-    const timeSelect = document.getElementById('time-select');
-    const timerDisplay = document.getElementById('timer-display');
-    const progressCircle = document.querySelector('.progress');
-    const startBtn = document.getElementById('start-btn');
-    const pauseBtn = document.getElementById('pause-btn');
-    let timerInterval;
-    let timeLeft;
-    let totalTime;
-    let isRunning = false;
+<div class="message-container" id="message-container" role="alert" aria-live="assertive">
+  <h2 id="task-title">Self-Care Task</h2>
+  <p id="task-text">Take 5 deep breaths and stretch your arms.</p>
+  <p id="affirmation-text"><strong>Affirmation:</strong> You're doing amazing, keep it up!</p>
+</div>
 
-    function updateDisplay() {
-      const minutes = Math.floor(timeLeft / 60);
-      const seconds = timeLeft % 60;
-      timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+<button id="boost-btn">💅 Give Me a Delusional Boost</button>
+<p id="boost-quote"></p>
 
-      const progress = 628 - (628 * (totalTime - timeLeft) / totalTime);
-      progressCircle.setAttribute('stroke-dashoffset', progress);
+<audio id="happy-audio" preload="auto">
+  <source src="https://actions.google.com/sounds/v1/alarms/bugle_tune.ogg" type="audio/ogg" />
+  <source src="https://actions.google.com/sounds/v1/alarms/bugle_tune.wav" type="audio/wav" />
+</audio>
+
+<script>
+  // Data arrays
+  const happySongs = [
+    "https://actions.google.com/sounds/v1/alarms/bugle_tune.ogg",
+    "https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg",
+    "https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg"
+  ];
+
+  const selfCareTasks = [
+    "Take 5 deep breaths and stretch your arms.",
+    "Drink a glass of water to stay hydrated.",
+    "Stand up and do a quick 1-minute stretch.",
+    "Close your eyes for 30 seconds and relax.",
+    "Write down one thing you're grateful for.",
+    "Take a quick walk around your room.",
+    "Do 10 jumping jacks to get your blood flowing."
+  ];
+
+  const affirmations = [
+    "You're doing amazing, keep it up!",
+    "Every minute counts — stay focused!",
+    "Believe in yourself and keep going!",
+    "Your hard work is paying off!",
+    "One step closer to your goal!",
+    "Stay positive and keep grinding!",
+    "You’ve got this — don’t give up!"
+  ];
+
+  const delusionalQuotes = [
+    "You're not tired. You're timeless.",
+    "Jeff Bezos is shaking right now.",
+    "You didn’t come this far to only slay 50%.",
+    "You're the main character. Everyone else is just an NPC.",
+    "Netflix is waiting, but your legacy won’t build itself.",
+    "You have the power of a thousand overcaffeinated squirrels.",
+    "You're about to make Einstein look like a group project slacker.",
+    "You're not procrastinating — you're preparing to dominate.",
+    "You could win a Nobel Prize just for showing up today.",
+    "Study now, flex later.",
+    "This Pomodoro session will go down in history.",
+    "You’re literally too iconic to fail.",
+    "Slay the study, save the semester.",
+    "Productivity has entered the chat.",
+    "Imagine how jealous your future self would be if you quit now.",
+    "You just gave Harvard imposter syndrome.",
+    "You are the moment.",
+    "You’re not studying — you’re writing your origin story.",
+    "You woke up and chose excellence.",
+    "You’re so powerful you made Google search *you*."
+  ];
+
+  // Elements
+  const studyTimeSelect = document.getElementById('study-time');
+  const timerDisplay = document.getElementById('timer-display');
+  const startBtn = document.getElementById('start-btn');
+  const pauseBtn = document.getElementById('pause-btn');
+  const resetBtn = document.getElementById('reset-btn');
+  const messageContainer = document.getElementById('message-container');
+  const taskText = document.getElementById('task-text');
+  const affirmationText = document.getElementById('affirmation-text');
+  const happyAudio = document.getElementById('happy-audio');
+  const boostBtn = document.getElementById('boost-btn');
+  const boostQuote = document.getElementById('boost-quote');
+
+  let timerDuration = parseInt(studyTimeSelect.value) * 60; // seconds
+  let timerRemaining = timerDuration;
+  let timerInterval = null;
+  let isRunning = false;
+
+  function formatTime(seconds) {
+    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const s = (seconds % 60).toString().padStart(2, '0');
+    return ${m}:${s};
+  }
+
+  function updateTimerDisplay() {
+    timerDisplay.textContent = formatTime(timerRemaining);
+  }
+
+  function startTimer() {
+    if (isRunning) return;
+    if (timerRemaining <= 0) {
+      timerRemaining = timerDuration;
     }
+    isRunning = true;
+    startBtn.disabled = true;
+    pauseBtn.disabled = false;
+    resetBtn.disabled = false;
+    messageContainer.classList.remove('visible');
+    boostQuote.textContent = '';
 
-    function startTimer() {
-      if (isRunning) return;
+    timerInterval = setInterval(() => {
+      timerRemaining--;
+      updateTimerDisplay();
 
-      totalTime = parseInt(timeSelect.value) * 60;
-      timeLeft = timeLeft || totalTime;
-      isRunning = true;
-      startBtn.disabled = true;
-      pauseBtn.disabled = false;
+      if (timerRemaining <= 0) {
+        clearInterval(timerInterval);
+        isRunning = false;
+        startBtn.disabled = false;
+        pauseBtn.disabled = true;
 
-      timerInterval = setInterval(() => {
-        if (timeLeft <= 0) {
-          clearInterval(timerInterval);
-          isRunning = false;
-          startBtn.disabled = false;
-          pauseBtn.disabled = true;
-          timeLeft = 0;
-        } else {
-          timeLeft--;
-          updateDisplay();
-        }
-      }, 1000);
-    }
+        showCompletionMessage();
+      }
+    }, 1000);
+  }
 
-    function pauseTimer() {
-      if (!isRunning) return;
-      clearInterval(timerInterval);
-      isRunning = false;
-      startBtn.disabled = false;
-      pauseBtn.disabled = true;
+  function pauseTimer() {
+    if (!isRunning) return;
+    clearInterval(timerInterval);
+    isRunning = false;
+    startBtn.disabled = false;
+    pauseBtn.disabled = true;
+  }
 
-      // Side-eye dog feature
-      const dog = document.getElementById('sideeye-dog');
-      const pauseAudio = document.getElementById('pause-audio');
-      dog.style.display = 'block';
-      pauseAudio.play().catch(e => console.log("Audio error:", e));
+  function resetTimer() {
+    clearInterval(timerInterval);
+    isRunning = false;
+    timerRemaining = timerDuration;
+    updateTimerDisplay();
+    startBtn.disabled = false;
+    pauseBtn.disabled = true;
+    resetBtn.disabled = true;
+    messageContainer.classList.remove('visible');
+    boostQuote.textContent = '';
+    stopAudio();
+  }
 
-      setTimeout(() => {
-        dog.style.display = 'none';
-      }, 3000);
-    }
+  function showCompletionMessage() {
+    // Pick random song, task, affirmation
+    const song = happySongs[Math.floor(Math.random() * happySongs.length)];
+    const task = selfCareTasks[Math.floor(Math.random() * selfCareTasks.length)];
+    const affirmation = affirmations[Math.floor(Math.random() * affirmations.length)];
 
-    timeSelect.addEventListener('change', () => {
-      totalTime = parseInt(timeSelect.value) * 60;
-      timeLeft = totalTime;
-      updateDisplay();
-      clearInterval(timerInterval);
-      isRunning = false;
-      startBtn.disabled = false;
-      pauseBtn.disabled = true;
+    // Update message
+    taskText.textContent = task;
+    affirmationText.innerHTML = <strong>Affirmation:</strong> ${affirmation};
+
+    // Show container
+    messageContainer.classList.add('visible');
+
+    // Play audio
+    happyAudio.src = song;
+    happyAudio.play().catch(e => {
+      // Autoplay might be blocked; user interaction required
+      console.log('Audio play prevented:', e);
     });
+  }
 
-    startBtn.addEventListener('click', startTimer);
-    pauseBtn.addEventListener('click', pauseTimer);
+  function stopAudio() {
+    happyAudio.pause();
+    happyAudio.currentTime = 0;
+  }
 
-    // Init
-    timeSelect.dispatchEvent(new Event('change'));
-  </script>
+  // Event Listeners
+  studyTimeSelect.addEventListener('change', () => {
+    if (isRunning) {
+      resetTimer();
+    }
+    timerDuration = parseInt(studyTimeSelect.value) * 60;
+    timerRemaining = timerDuration;
+    updateTimerDisplay();
+  });
+
+  startBtn.addEventListener('click', startTimer);
+  pauseBtn.addEventListener('click', pauseTimer);
+  resetBtn.addEventListener('click', resetTimer);
+
+  boostBtn.addEventListener('click', () => {
+    const randomIndex = Math.floor(Math.random() * delusionalQuotes.length);
+    boostQuote.textContent = delusionalQuotes[randomIndex];
+  });
+
+  // Initialize display
+  updateTimerDisplay();
+</script>
+
 </body>
 </html>
