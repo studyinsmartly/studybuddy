@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Study Buddy Pomodoro</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+  :root {
+    --primary-color: #5cdb95;
+    --secondary-color: #05386b;
+    --background-color: #edf5e1;
+    --accent-color: #379683;
+    --text-color: #05386b;
+    --shadow-color: rgba(0,0,0,0.1);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--background-color);
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+
+  header {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  header h1 {
+    font-weight: 700;
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+  }
+
+  .timer-settings {
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 350px;
+  }
+
+  label {
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+
+  select {
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    border: 2px solid var(--primary-color);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--secondary-color);
+    cursor: pointer;
+    background: white;
+    transition: border-color 0.3s ease;
+    width: 100%;
+  }
+
+  select:hover, select:focus {
+    border-color: var(--accent-color);
+    outline: none;
+  }
+
+  #timer-display {
+    font-size: 6rem;
+    font-weight: 700;
+    color: var(--secondary-color);
+    letter-spacing: 8px;
+    margin-bottom: 2rem;
+    user-select: none;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  button {
+    background-color: var(--primary-color);
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 6px 15px var(--shadow-color);
+    transition: background-color 0.3s ease;
+    user-select: none;
+  }
+
+  button:hover {
+    background-color: var(--accent-color);
+  }
+
+  .message-container {
+    margin-top: 2rem;
+    background: white;
+    max-width: 400px;
+    padding: 1.5rem 2rem;
+    border-radius: 20px;
+    box-shadow: 0 6px 15px var(--shadow-color);
+    text-align: center;
+    display: none;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .message-container.visible {
+    display: flex;
+  }
+
+  .message-container h2 {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+  }
+
+  .message-container p {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--secondary-color);
+  }
+
+  audio {
+    display: none;
+  }
+
+  @media (max-width: 400px) {
+    #timer-display {
+      font-size: 4.5rem;
+      letter-spacing: 5px;
+    }
+    button {
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Study Buddy Pomodoro</h1>
+</header>
+
+<div class="timer-settings">
+  <label for="study-time">Choose Study Time:</label>
+  <select id="study-time" aria-label="Choose study time in minutes">
+    <option value="15">15 minutes</option>
+    <option value="20" selected>20 minutes</option>
+    <option value="25">25 minutes</option>
+    <option value="30">30 minutes</option>
+    <option value="45">45 minutes</option>
+  </select>
+</div>
+
+<div id="timer-display" aria-live="polite" aria-atomic="true">20:00</div>
+
+<div class="buttons">
+  <button id="start-btn" aria-label="Start Timer">Start</button>
+  <button id="pause-btn" aria-label="Pause Timer" disabled>Pause</button>
+  <button id="reset-btn" aria-label="Reset Timer" disabled>Reset</button>
+</div>
+
+<div class="message-container" id="message-container" role="alert" aria-live="assertive">
+  <h2 id="task-title">Self-Care Task</h2>
+  <p id="task-text">Take 5 deep breaths and stretch your arms.</p>
+  <p id="affirmation-text"><strong>Affirmation:</strong> You're doing amazing, keep it up!</p>
+</div>
+
+<audio id="happy-audio" preload="auto">
+  <source src="https://actions.google.com/sounds/v1/alarms/bugle_tune.ogg" type="audio/ogg" />
+  <source src="https://actions.google.com/sounds/v1/alarms/bugle_tune.wav" type="audio/wav" />
+  <!-- Replace with your own happy songs -->
+</audio>
+
+<script>
+  // Data arrays
+  const happySongs = [
+    "https://actions.google.com/sounds/v1/alarms/bugle_tune.ogg", // cheerful short tune
+    "https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg",
+    "https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg"
+  ];
+
+  const selfCareTasks = [
+    "Take 5 deep breaths and stretch your arms.",
+    "Drink a glass of water to stay hydrated.",
+    "Stand up and do a quick 1-minute stretch.",
+    "Close your eyes for 30 seconds and relax.",
+    "Write down one thing you're grateful for.",
+    "Take a quick walk around your room.",
+    "Do 10 jumping jacks to get your blood flowing."
+  ];
+
+  const affirmations = [
+    "You're doing amazing, keep it up!",
+    "Every minute counts — stay focused!",
+    "Believe in yourself and keep going!",
+    "Your hard work is paying off!",
+    "One step closer to your goal!",
+    "Stay positive and keep grinding!",
+    "You’ve got this — don’t give up!"
+  ];
+
+  // Elements
+  const studyTimeSelect = document.getElementById('study-time');
+  const timerDisplay = document.getElementById('timer-display');
+  const startBtn = document.getElementById('start-btn');
+  const pauseBtn = document.getElementById('pause-btn');
+  const resetBtn = document.getElementById('reset-btn');
+  const messageContainer = document.getElementById('message-container');
+  const taskText = document.getElementById('task-text');
+  const affirmationText = document.getElementById('affirmation-text');
+  const happyAudio = document.getElementById('happy-audio');
+
+  let timerDuration = parseInt(studyTimeSelect.value) * 60; // seconds
+  let timerRemaining = timerDuration;
+  let timerInterval = null;
+  let isRunning = false;
+
+  function formatTime(seconds) {
+    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const s = (seconds % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+  }
+
+  function updateTimerDisplay() {
+    timerDisplay.textContent = formatTime(timerRemaining);
+  }
+
+  function startTimer() {
+    if (isRunning) return;
+    if (timerRemaining <= 0) {
+      timerRemaining = timerDuration;
+    }
+    isRunning = true;
+    startBtn.disabled = true;
+    pauseBtn.disabled = false;
+    resetBtn.disabled = false;
+    messageContainer.classList.remove('visible');
+
+    timerInterval = setInterval(() => {
+      timerRemaining--;
+      updateTimerDisplay();
+
+      if (timerRemaining <= 0) {
+        clearInterval(timerInterval);
+        isRunning = false;
+        startBtn.disabled = false;
+        pauseBtn.disabled = true;
+
+        // Show message, play song
+        showCompletionMessage();
+      }
+    }, 1000);
+  }
+
+  function pauseTimer() {
+    if (!isRunning) return;
+    clearInterval(timerInterval);
+    isRunning = false;
+    startBtn.disabled = false;
+    pauseBtn.disabled = true;
+  }
+
+  function resetTimer() {
+    clearInterval(timerInterval);
+    isRunning = false;
+    timerRemaining = timerDuration;
+    updateTimerDisplay();
+    startBtn.disabled = false;
+    pauseBtn.disabled = true;
+    resetBtn.disabled = true;
+    messageContainer.classList.remove('visible');
+    stopAudio();
+  }
+
+  function showCompletionMessage() {
+    // Pick random song, task, affirmation
+    const song = happySongs[Math.floor(Math.random() * happySongs.length)];
+    const task = selfCareTasks[Math.floor(Math.random() * selfCareTasks.length)];
+    const affirmation = affirmations[Math.floor(Math.random() * affirmations.length)];
+
+    // Update message
+    taskText.textContent = task;
+    affirmationText.innerHTML = `<strong>Affirmation:</strong> ${affirmation}`;
+
+    // Show container
+    messageContainer.classList.add('visible');
+
+    // Play audio
+    happyAudio.src = song;
+    happyAudio.play().catch(e => {
+      // Autoplay might be blocked; user interaction required
+      console.log('Audio play prevented:', e);
+    });
+  }
+
+  function stopAudio() {
+    happyAudio.pause();
+    happyAudio.currentTime = 0;
+  }
+
+  // Event Listeners
+  studyTimeSelect.addEventListener('change', () => {
+    if (isRunning) {
+      resetTimer();
+    }
+    timerDuration = parseInt(studyTimeSelect.value) * 60;
+    timerRemaining = timerDuration;
+    updateTimerDisplay();
+  });
+
+  startBtn.addEventListener('click', () => {
+    startTimer();
+  });
+
+  pauseBtn.addEventListener('click', () => {
+    pauseTimer();
+  });
+
+  resetBtn.addEventListener('click', () => {
+    resetTimer();
+  });
+
+  // Initialize display
+  updateTimerDisplay();
+</script>
+
+</body>
+</html>
