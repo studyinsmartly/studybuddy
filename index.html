@@ -1,154 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Study Buddy Pomodoro</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Study Buddy Pomodoro</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
 
-    :root {
-      --primary-color: #5cdb95;
-      --secondary-color: #05386b;
-      --background-color: #edf5e1;
-      --accent-color: #379683;
-      --text-color: #05386b;
-      --shadow-color: rgba(0,0,0,0.1);
-    }
+  :root {
+    --primary-color: #5cdb95;
+    --secondary-color: #05386b;
+    --background-color: #edf5e1;
+    --accent-color: #379683;
+    --text-color: #05386b;
+    --shadow-color: rgba(0,0,0,0.1);
+  }
 
-    * {
-      box-sizing: border-box;
-    }
+  * {
+    box-sizing: border-box;
+  }
 
-    body {
-      margin: 0;
-      background-color: var(--background-color);
-      font-family: 'Poppins', sans-serif;
-      color: var(--text-color);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      min-height: 100vh;
-      padding: 2rem 1rem;
-    }
+  body {
+    margin: 0;
+    background-color: var(--background-color);
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
 
-    header {
-      margin-bottom: 2rem;
-      text-align: center;
-    }
+  header {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
 
-    header h1 {
-      font-weight: 700;
-      font-size: 2.5rem;
-      letter-spacing: 2px;
-    }
+  header h1 {
+    font-weight: 700;
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+  }
 
-    .timer-settings {
-      margin-bottom: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-      width: 100%;
-      max-width: 350px;
-    }
+  .timer-settings {
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 350px;
+  }
 
-    label {
-      font-weight: 600;
-      font-size: 1.1rem;
-    }
+  label {
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
 
-    select {
-      padding: 0.6rem 1rem;
-      border-radius: 10px;
-      border: 2px solid var(--primary-color);
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--secondary-color);
-      cursor: pointer;
-      background: white;
-      transition: border-color 0.3s ease;
-      width: 100%;
-    }
+  select {
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    border: 2px solid var(--primary-color);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--secondary-color);
+    cursor: pointer;
+    background: white;
+    transition: border-color 0.3s ease;
+    width: 100%;
+  }
 
-    select:hover, select:focus {
-      border-color: var(--accent-color);
-      outline: none;
-    }
+  select:hover, select:focus {
+    border-color: var(--accent-color);
+    outline: none;
+  }
 
-    #timer-container {
-      position: relative;
-      width: 220px;
-      height: 220px;
-      margin-bottom: 2rem;
-    }
+  #timer-container {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    margin-bottom: 2rem;
+  }
 
-    svg {
-      position: absolute;
-      top: 0; left: 0;
-      transform: rotate(-90deg);
-      width: 220px;
-      height: 220px;
-    }
+  svg {
+    position: absolute;
+    top: 0; left: 0;
+    transform: rotate(-90deg);
+    width: 220px;
+    height: 220px;
+  }
 
-    circle.bg {
-      fill: none;
-      stroke: #ccc;
-      stroke-width: 15;
-    }
+  circle.bg {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 15;
+  }
 
-    circle.progress {
-      fill: none;
-      stroke: var(--primary-color);
-      stroke-width: 15;
-      stroke-linecap: round;
-      transition: stroke-dashoffset 1s linear;
-    }
+  circle.progress {
+    fill: none;
+    stroke: var(--primary-color);
+    stroke-width: 15;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s linear;
+  }
 
+  #timer-display {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 5rem;
+    font-weight: 700;
+    color: var(--secondary-color);
+    letter-spacing: 8px;
+    user-select: none;
+    width: 100%;
+    text-align: center;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  button {
+    background-color: var(--primary-color);
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 6px 15px var(--shadow-color);
+    transition: background-color 0.3s ease;
+    user-select: none;
+  }
+
+  button:hover:not(:disabled) {
+    background-color: var(--accent-color);
+  }
+
+  button:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  .message-container {
+    margin-top: 2rem;
+    background: white;
+    max-width: 400px;
+    padding: 1.5rem 2rem;
+    border-radius: 20px;
+    box-shadow: 0 6px 15px var(--shadow-color);
+    text-align: center;
+    display: none;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .message-container.visible {
+    display: flex;
+  }
+
+  .message-container h2 {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+  }
+
+  .message-container p {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--secondary-color);
+  }
+
+  /* Delusional Boost Button styles */
+  #boost-btn {
+    background-color: #ff69b4;
+    color: white;
+    font-weight: bold;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    font-size: 1.1rem;
+    margin-top: 2rem;
+  }
+
+  #boost-btn:hover {
+    background-color: #e04896;
+  }
+
+  #boost-quote {
+    margin-top: 1.5rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--secondary-color);
+    min-height: 2.5em;
+  }
+
+  @media (max-width: 400px) {
     #timer-display {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 5rem;
-      font-weight: 700;
-      color: var(--secondary-color);
-      letter-spacing: 8px;
-      user-select: none;
-      width: 100%;
-      text-align: center;
+      font-size: 4.5rem;
+      letter-spacing: 5px;
     }
-
-    .buttons {
-      display: flex;
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
     button {
-      background-color: var(--primary-color);
-      border: none;
-      padding: 1rem 2rem;
-      border-radius: 50px;
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: white;
-      cursor: pointer;
-      box-shadow: 0 6px 15px var(--shadow-color);
-      transition: background-color 0.3s ease;
-      user-select: none;
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
     }
+  }
+</style>
+</head>
+<body>
 
-    button:hover:not(:disabled) {
-      background-color: var(--accent-color);
-    }
-
-    button:disabled {
-      opacity: 0.5;
-      cursor: default;
-    }
-
-    .message-container {
-      margin-top: 2rem;
-      background: white;
-      max-width: 400px;
+<header>
+  <h1>Study B
