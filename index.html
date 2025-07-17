@@ -15,6 +15,15 @@
     --text-color: #05386b;
     --shadow-color: rgba(0,0,0,0.1);
   }
+<body>
+  <div style="margin-top: 2rem; text-align: center;">
+    <button id="boost-btn" style="background-color: #ff69b4; color: white; font-weight: bold; padding: 1rem 2rem; border-radius: 50px; border: none; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.1); font-size: 1.1rem;">
+      💅 Give Me a Delusional Boost
+    </button>
+    <p id="boost-quote" style="margin-top: 1.5rem; font-size: 1.2rem; font-weight: 600; color: #05386b;"></p>
+  </div>
+
+  <!-- Rest of the content below -->
 
   * {
     box-sizing: border-box;
@@ -346,6 +355,7 @@
   </button>
   <p id="boost-quote" style="margin-top: 1.5rem; font-size: 1.2rem; font-weight: 600; color: #05386b;"></p>
 </div>
+  <script>
 // Delusional Boost Quotes
 const delusionalQuotes = [
   "You're not tired. You're timeless.",
@@ -377,6 +387,7 @@ boostBtn.addEventListener("click", () => {
   const randomIndex = Math.floor(Math.random() * delusionalQuotes.length);
   boostQuote.textContent = delusionalQuotes[randomIndex];
 });
+  <script>
 
 </body>
 </html>
