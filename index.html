@@ -340,9 +340,43 @@
     resetTimer();
   });
 
-  // Initialize display
-  updateTimerDisplay();
-</script>
+  // Initialize <div style="margin-top: 2rem; text-align: center;">
+  <button id="boost-btn" style="background-color: #ff69b4; color: white; font-weight: bold; padding: 1rem 2rem; border-radius: 50px; border: none; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.1); font-size: 1.1rem;">
+    💅 Give Me a Delusional Boost
+  </button>
+  <p id="boost-quote" style="margin-top: 1.5rem; font-size: 1.2rem; font-weight: 600; color: #05386b;"></p>
+</div>
+// Delusional Boost Quotes
+const delusionalQuotes = [
+  "You're not tired. You're timeless.",
+  "Jeff Bezos is shaking right now.",
+  "You didn’t come this far to only slay 50%.",
+  "You're the main character. Everyone else is just an NPC.",
+  "Netflix is waiting, but your legacy won’t build itself.",
+  "You have the power of a thousand overcaffeinated squirrels.",
+  "You're about to make Einstein look like a group project slacker.",
+  "You're not procrastinating — you're preparing to dominate.",
+  "You could win a Nobel Prize just for showing up today.",
+  "Study now, flex later.",
+  "This Pomodoro session will go down in history.",
+  "You’re literally too iconic to fail.",
+  "Slay the study, save the semester.",
+  "Productivity has entered the chat.",
+  "Imagine how jealous your future self would be if you quit now.",
+  "You just gave Harvard imposter syndrome.",
+  "You are the moment.",
+  "You’re not studying — you’re writing your origin story.",
+  "You woke up and chose excellence.",
+  "You’re so powerful you made Google search *you*."
+];
+
+const boostBtn = document.getElementById("boost-btn");
+const boostQuote = document.getElementById("boost-quote");
+
+boostBtn.addEventListener("click", () => {
+  const randomIndex = Math.floor(Math.random() * delusionalQuotes.length);
+  boostQuote.textContent = delusionalQuotes[randomIndex];
+});
 
 </body>
 </html>
